@@ -33,7 +33,9 @@ object SparkStream extends App{
   val dflinha = dfKafka.selectExpr("CAST(key AS STRING)", "to_json(CAST(value AS STRING))", "timestamp")
     .as[(String, String, Timestamp)]
 
-  val dflinhaJson = dfKafka.select(from_json(col("data")).select(from_json(col("data"),schema).as("data"))
+  val dflinhaJson = dfKafka.selectExpr("CAST(key AS STRING)", "from_json(CAST(value AS STRING))", "timestamp")
+
+  //val dflinhaJson = dfKafka.select(from_json(col("data")).select(from_json(col("data"),schema).as("data"))
 
   println(dfKafka.printSchema())
   println(dflinha.printSchema())
