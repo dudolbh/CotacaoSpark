@@ -9,5 +9,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % "3.0.0",
   "org.apache.spark" %% "spark-streaming" % "3.0.0",
   "org.apache.spark" %% "spark-sql-kafka-0-10" % "3.0.0",
-  "com.datastax.spark" %% "spark-cassandra-connector" % "3.0.0-beta"
+  "com.datastax.spark" %% "spark-cassandra-connector" % "3.0.0-beta",
+  "joda-time" % "joda-time" % "2.10.6"
+
 )
