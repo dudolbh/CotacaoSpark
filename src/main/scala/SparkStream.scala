@@ -32,10 +32,11 @@ object SparkStream extends App{
     .format("kafka")
     .option("kafka.bootstrap.servers", bootstrapServers)
     .option("subscribe", topic)
-    .option("startingOffsets", "earliest")
+    .option("startingOffsets", "latest")
     .option("fetchOffset.retryIntervalMs", 10000)
     .option("maxOffsetsPerTrigger", 10)
     .load()
+//    .option("startingOffsets", "earliest")
 
   val dflinha = dfKafka.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)", "timestamp")
     .as[(String, String, Timestamp)]
@@ -57,7 +58,7 @@ object SparkStream extends App{
       StructField("Grupo",StringType,true),
       StructField("Nome_promocao",StringType,true),
       StructField("Valor",LongType,true))),true),true),
-    StructField("logado",LongType,true)))
+    StructField("Logado",LongType,true)))
 
   println("Schema pelo Struc Type")
   println(schema2.printTreeString())
@@ -114,12 +115,14 @@ object SparkStream extends App{
     .start()*/
   val insertCasandra = dfCotacao.writeStream
     .outputMode("update")
-    .trigger(Trigger.Once())
+    .trigger(Trigger.ProcessingTime("10 seconds"))
     .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
       batchDF.writeTo("cotacao.cotacao.cotacao").append()
     }
     .start()
 
+
+   // .trigger(Trigger.Once())
   //Necessário pois o banco não aceita uma stream continua
   /*val dfCotacao2 = dfCotacao
   val outDfCassandra = dfCotacao2.writeStream
